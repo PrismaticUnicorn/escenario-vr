@@ -1,255 +1,222 @@
 <!DOCTYPE html> 
 <html lang="en"> 
 <head> 
-    <meta charset="UTF-8">
-    <title>Ofrenda Low Poly</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+    <title>Práctica 01</title>
 </head>
 <body>
     
-<canvas id="myCanvas"></canvas>
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
 
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
 <script type="importmap"> 
     {
         "imports":{
             "three": "./js/three.module.js",
             "three/OrbitControls": "./js/OrbitControls.js" 
         }
-    }
+}
 </script>
-
 <script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
     import * as THREE from 'three'; 
-    import { OrbitControls } from 'three/OrbitControls';
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
 
-    // 🕹️ Renderer
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
     var renderer = new THREE.WebGLRenderer({
-        canvas: document.getElementById('myCanvas'), 
-        antialias: true
+    canvas: document.getElementById('myCanvas'), antialias: true,
     });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(window.decivePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x70707C);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
 
-    // 🎬 Escena
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
     var scene = new THREE.Scene();
-    
-    // 🎥 Cámara
-    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.set(0, 20, 45);
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
     scene.add(camera);
 
-    // 🎮 Controls
+    //Settings de la cámara
+    camera.position.set(0, 4, 25);
+
+    // Añadiendo los OrbitControls
     var controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-//fondo textura
- var loader = new THREE.TextureLoader();
-        var bgtexture = loader.load("./assets/void.jpg");
-        scene.background=bgtexture;
+// Grids
+
+var gridHelper = new THREE.GridHelper(200,200);
+//scene.add(gridHelper);
+
+var polargrid = new THREE.PolarGridHelper(200,50,20,20);
+//scene.add(polargrid);
+
+// Ejes
+var axes = new THREE.AxesHelper(100);
+//scene.add(axes);
+ 
+
+// Espacio para colocar los objetos
+
+///  💫💢🐭🐭 LUCES
+
+ var light1 = new THREE.AmbientLight(0xffffff,1.5);
+//scene.add(light1);
+
+ var light2 = new THREE.DirectionalLight(0xffffff,1.5);
+scene.add(light2);
+light2.position.set(0,40,0);
+
+ var light3 = new THREE.HemisphereLight(0xffffff,0xffff,1.5);
+scene.add(light3);
+light3.position.set(0,40,0);
+
+//// SOMBRA
+
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+var light = new THREE.DirectionalLight(0xffffff,2);
+light.position.set(0, 30, 40);
+light.target.position.set(0, 0, 0); 
+light.castShadow = true;
+light.shadow.bias = 0.01;
+light.shadow.mapSize.width = 512*3;
+light.shadow.mapSize.height = 512*3;
+
+light.shadow.camera.top=25;
+light.shadow.camera.right=25;
+light.shadow.camera.left=-25;
+light.shadow.camera.bottom=-25;
+light.shadow.camera.visible=true;
+
+var directionalHelper = new THREE.CameraHelper(light.shadow.camera);
+//scene.add(directionalHelper);
+
+scene.add(light);
 
 
 
-    // 💫 LUCES
-    var light = new THREE.DirectionalLight(0xffffff, 2);
-    light.position.set(20, 40, 30);
-    light.target.position.set(0, 0, 0);
-    light.castShadow = true;
-    light.shadow.bias = 0.001;
-    light.shadow.mapSize.width = 1048;
-    light.shadow.mapSize.height = 2048;
-    light.shadow.camera.top = 50;
-    light.shadow.camera.right = 50;
-    light.shadow.camera.left = -50;
-    light.shadow.camera.bottom = -50;
-    scene.add(light);
+//OBJETOS  ✏️✏️✏️✏️  🪶
 
-    var light3 = new THREE.HemisphereLight(0x9C6416, 0x783D13, 0.8);
-    light3.position.set(100, 20, 0);
-    scene.add(light3);
+//piso
 
-    // ✏️ OBJETOS DE LA OFRENDA 
-
-     // Base
-    var geometry01 = new THREE.BoxGeometry(1500, 0.5, 1500);
-    var material01 = new THREE.MeshLambertMaterial({
-        color: 0x000000,
-        side: THREE.DoubleSide,
-        flatShading: true
-    });
-    var mesh01 = new THREE.Mesh(geometry01, material01);
-    mesh01.position.set(0, 10, 0);
-    mesh01.receiveShadow = true;
-    scene.add(mesh01);
-
-//muro lado 1
- var geometry = new THREE.BoxGeometry(12, 85, 280);
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(50, 50, 16);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//muro lado 2    
- var geometry = new THREE.BoxGeometry(12, 85, 280+70);
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-60, 50, 16);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//pilar 1
-   var geometry = new THREE.BoxGeometry(12, 95, 28);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-56, 50, 20+10);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//pilar 2
-      var geometry = new THREE.BoxGeometry(12, 95, 28);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(46, 50, 20+10);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//grava1
-     var geometry = new THREE.BoxGeometry(10, 40, 280);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(48, 20, 16);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//grava2
- var geometry = new THREE.BoxGeometry(10, 40, 280+70);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-58, 20, 16);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//pilar inicio 1
-      var geometry = new THREE.BoxGeometry(12, 95, 28);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(46, 50, 150+20-26);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-
-    //pilar inicio 2
-    var geometry = new THREE.BoxGeometry(12, 95, 28);
-var texture = new  THREE.TextureLoader().load("./assets/grava.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-56, 50, 150+20-26);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-//pared final 1
- var geometry = new THREE.BoxGeometry(140, 110, 16);
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-5, 50-5, -100);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-
-    //mesa arriba
-     var geometry = new THREE.CylinderGeometry(90-20, 105-20, 16+50,10);
-var texture = new  THREE.TextureLoader().load("./assets/roca3.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-5, 50-45, -100);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-    //mesa abajo
-var geometry = new THREE.CylinderGeometry(90, 105, 16+40,7);
-var texture = new  THREE.TextureLoader().load("./assets/roca3.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-    mesh.position.set(-5,0-10, -100+20);
-    scene.add(mesh);
-    mesh.receiveShadow = true;
-
-    //piso
-var geometry = new THREE.BoxGeometry(115+10,100+195+70,5,40);
-
-var texture = new  THREE.TextureLoader().load("./assets/roca3.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(-5,10,10)
-mesh.rotation.set(Math.PI/2,0,0);
-scene.add(mesh);
-    mesh.receiveShadow = true;
-//techo
-    var geometry = new THREE.BoxGeometry(86,100+195+70,5,40);
-
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(-5,100,10)
-mesh.rotation.set(Math.PI/2,0,0);
-scene.add(mesh);
-    mesh.receiveShadow = true;
-
-//techo lado    
-var geometry = new THREE.BoxGeometry(35,100+180+70,10,40);
-
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(39,110-20,10)
-mesh.rotation.set(Math.PI/2,2,0);
-scene.add(mesh);
-    mesh.receiveShadow = true;
-
-//tacho lado 2
-var geometry = new THREE.BoxGeometry(35,100+190+70,10,40);
-
-var texture = new  THREE.TextureLoader().load("./assets/roca2.jpg");
-    var material = new THREE.MeshLambertMaterial({map:texture});
-    var mesh = new THREE.Mesh(geometry,material);
-mesh.position.set(-51,110-20,10)
-mesh.rotation.set(Math.PI/2,1,0);
-scene.add(mesh);
-    mesh.receiveShadow = true;
-
-   // prueva de escala
-
-   var geometry01 = new THREE.BoxGeometry(5,5,5);
-var material01 = new THREE.MeshNormalMaterial
+var geometry01 = new THREE.BoxGeometry(300,0.5,300);
+var material01 = new THREE.MeshLambertMaterial
 ({
     color:0x38FF95,
-    side:THREE.DoubleSide
+    side:THREE.DoubleSide,
 });
 var mesh01 = new THREE.Mesh(geometry01,material01);
 scene.add(mesh01);
-mesh01.position.set(-40,15,20)
+mesh01.position.set(0,1,0)
 
-    /*
+//florecitas1
 
- */
+var flor0 = new THREE.TorusKnotGeometry(4,3,100,8,8,13);
+var mat0 = new THREE.MeshBasicMaterial({color:0x5CE1E6}); // Cyan
+var mesh0 = new THREE.Mesh(flor0,mat0);
+mesh0.position.set(-20,6,-10);
+mesh0.rotation.set(Math.PI/2,0,0);
+scene.add(mesh0);
+mesh0.castShadow = true;
 
-    // 🎰 Rendering y animación
-    function render() {
-        controls.update();
-        renderer.render(scene, camera);
-        requestAnimationFrame(render);
-    }
+//florecitas2
+
+var flor1 = new THREE.TorusKnotGeometry(4,3,100,16,18,13);
+var mat1 = new THREE.MeshLambertMaterial({color:0xFF5757}); // Rojo suave
+var mesh1 = new THREE.Mesh(flor1,mat1);
+mesh1.position.set(20,6,-10);
+mesh1.rotation.set(Math.PI/2,0,0);
+scene.add(mesh1);
+mesh1.castShadow = true;
+
+//florecitas3
+
+var flor2 = new THREE.TorusKnotGeometry(4,4,100,16,18,13);
+var mat2 = new THREE.MeshPhongMaterial({
+  color:0xCBAACB, // Lila
+  shininess:50,
+  specular: 0x0f0f0f
+});
+var mesh2 = new THREE.Mesh(flor2,mat2);
+mesh2.position.set(0,6,5);
+mesh2.rotation.set(Math.PI/2,0,0);
+scene.add(mesh2);
+mesh2.castShadow = true;
+
+//florecitas4
+
+var flor3 = new THREE.TorusKnotGeometry(8,1,200,16,18,13);
+var mat3 = new THREE.MeshStandardMaterial({
+  color:0xFFDE59, // Amarillo
+  metalness:0.5,
+  roughness:0.3,
+});
+var mesh3 = new THREE.Mesh(flor3,mat3);
+mesh3.position.set(-25,6,-35);
+mesh3.rotation.set(Math.PI/2,0,0);
+scene.add(mesh3);
+mesh3.castShadow = true;
+
+//florecitas5
+
+var flor4 = new THREE.TorusKnotGeometry(8,1,500,16,18,13);
+var mat4 = new THREE.MeshPhysicalMaterial({
+  color:0x7ED957, // Verde claro
+  transeisson:1,
+  roughness:0,
+  ior:1.5,
+  tickness:0.5
+});
+var mesh4 = new THREE.Mesh(flor4,mat4);
+mesh4.position.set(25,6,-35);
+mesh4.rotation.set(Math.PI/2,0,0);
+scene.add(mesh4);
+mesh4.castShadow = true;
+
+//florecitas6
+
+var flor5 = new THREE.TorusKnotGeometry(5,2,100,16,12,10);
+var mat5 = new THREE.MeshPhongMaterial({
+  color:0xFF8C00, // Naranja
+  shininess:40,
+  specular: 0x111111
+});
+var mesh5 = new THREE.Mesh(flor5,mat5);
+mesh5.position.set(0,6,-20);
+mesh5.rotation.set(Math.PI/2,0,0);
+scene.add(mesh5);
+mesh5.castShadow = true;
+
+
+
+
+
+
+
+//🎰🎰Rendering y animación
     requestAnimationFrame(render);
+    function render() {
+    //🪄🪄 Animación - 
 
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+
+
+
+
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
 </script>
 </body>
 </html>
