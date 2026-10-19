@@ -1,0 +1,149 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>Vela con luz</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x70707C);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 25);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+//Grids
+var gridHelper = new THREE.GridHelper(200,200);
+//scene.add(gridHelper);
+
+var Polargrid = new THREE.PolarGridHelper(50,50,20,20);
+ //scene.add(Polargrid);
+
+ //Ejes
+ var axes = new THREE.AxesHelper(100);
+//scene.add(axes);
+
+// Espacio para colocar los objetos
+
+///  💫💢🐭🐭 LUCES
+/*
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+var light = new THREE.DirectionalLight(0xffffff,2);
+light.position.set(0, 30, 40);
+light.target.position.set(0, 0, 0); //cuando hay sombra
+light.castShadow = true;
+light.shadow.bias = 0.01;
+light.shadow.mapSize.width = 512*3;
+light.shadow.mapSize.height = 512*3;
+
+light.shadow.camera.top=25;
+light.shadow.camera.right=25;
+light.shadow.camera.left=-25;
+light.shadow.camera.bottom=-25;
+light.shadow.camera.visible=true;
+
+var directionalHelper = new THREE.CameraHelper(light.shadow.camera);
+//scene.add(directionalHelper);
+
+scene.add(light);
+var light1 = new THREE.AmbientLight(0xffffff,1.5);
+///scene.add (light1); 
+
+//var light2 = new THREE.DirectionalLight(0xffffff,1.4);
+//scene.add (light2);
+//light2.position.set(0,40,0);
+
+
+var light3 = new THREE.HemisphereLight(0xffffff,0xffffff,0.8);
+//scene.add (light3);
+light3.position.set(0,40,0);
+
+*/
+//OBJETOS  ✏️✏️✏️✏️  🪶
+
+var antorcha = new THREE.CylinderGeometry(1,0.2,4,10);
+var material05 = new THREE.MeshStandardMaterial(
+    {color:0x5c3a21,
+        side: THREE.DoubleSide,
+    }
+);
+var mesh05 = new THREE.Mesh(antorcha,material05);
+scene.add(mesh05);
+mesh05.position.set(10,2,0);
+
+var fuegoan = new THREE.OctahedronGeometry(1.5,0);
+var materialan = new THREE.MeshStandardMaterial({
+    color:0xffd000,
+        side: THREE.DoubleSide,
+    });
+var meshan = new THREE.Mesh(fuegoan,materialan);
+scene.add(meshan);
+meshan.position.set(10,4.8,0);
+
+var pL1 = new THREE.PointLight(0xFF7700, 5, 10,);
+pL1.position.set(8, 4.8, 0);
+scene.add(pL1);
+
+var pL2 = new THREE.PointLight(0xFF7700, 5, 10,);
+pL2.position.set(12,4.8,0);
+scene.add(pL2);
+
+
+
+//🎰🎰Rendering y animación
+
+    requestAnimationFrame(render);
+    function render() {
+    //🪄🪄 Animación - 
+
+
+
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>

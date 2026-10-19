@@ -1,0 +1,223 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8">
+    <title>Papel Picado</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+    }
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x70707C);
+
+// 🎬 Creando nueva escena
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
+    scene.add(camera);
+
+    //Settings de la cámara
+    camera.position.set(0, 12, 22);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 8, 0);
+
+//Grids
+var gridHelper = new THREE.GridHelper(200, 200);
+scene.add(gridHelper);
+
+//Ejes
+var axes = new THREE.AxesHelper(100);
+scene.add(axes);
+
+//OBJETOS ✏️✏️✏️✏️ 🪶
+
+ // 🧶 1. Cuerda superior
+    var geometry01 = new THREE.CylinderGeometry(0.08, 0.08, 20, 16);
+    var matPapel01 = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh01 = new THREE.Mesh(geometry01, matPapel01);
+    mesh01.rotation.z = Math.PI / 2;
+    mesh01.position.set(0, 14, 0);
+    mesh01.castShadow = true;
+    scene.add(mesh01);
+
+    // 📄 2. Base principal del papel
+    var geometry02 = new THREE.PlaneGeometry(12, 9);
+    var matPapel02 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh02 = new THREE.Mesh(geometry02, matPapel02);
+    mesh02.position.set(0, 8.5, 0);
+    mesh02.castShadow = true;
+    scene.add(mesh02);
+
+    // 3. Orificio central
+    var geometry03 = new THREE.PlaneGeometry(2.2, 2.2);
+    var matPapel03 = new THREE.MeshLambertMaterial({
+        color: 0x70707C,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh03 = new THREE.Mesh(geometry03, matPapel03);
+    mesh03.position.set(0, 8.5, 0.02);
+    mesh03.castShadow = true;
+    scene.add(mesh03);
+
+    // 4. Rombos esquinas
+    var geometry04 = new THREE.PlaneGeometry(1.2, 1.2);
+    var matPapel04 = new THREE.MeshLambertMaterial({
+        color: 0x70707C,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh04 = new THREE.Mesh(geometry04, matPapel04);
+    mesh04.position.set(-4, 11, 0.02);
+    mesh04.rotation.z = Math.PI / 4;
+    mesh04.castShadow = true;
+    scene.add(mesh04);
+
+    var geometry05 = new THREE.PlaneGeometry(1.2, 1.2);
+    var matPapel05 = new THREE.MeshLambertMaterial({
+        color: 0x70707C,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh05 = new THREE.Mesh(geometry05, matPapel05);
+    mesh05.position.set(4, 11, 0.02);
+    mesh05.rotation.z = Math.PI / 4;
+    mesh05.castShadow = true;
+    scene.add(mesh05);
+
+    var geometry06 = new THREE.PlaneGeometry(1.2, 1.2);
+    var matPapel06 = new THREE.MeshLambertMaterial({
+        color: 0x70707C,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh06 = new THREE.Mesh(geometry06, matPapel06);
+    mesh06.position.set(-4, 6, 0.02);
+    mesh06.rotation.z = Math.PI / 4;
+    mesh06.castShadow = true;
+    scene.add(mesh06);
+
+    var geometry07 = new THREE.PlaneGeometry(1.2, 1.2);
+    var matPapel07 = new THREE.MeshLambertMaterial({
+        color: 0x70707C,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh07 = new THREE.Mesh(geometry07, matPapel07);
+    mesh07.position.set(4, 6, 0.02);
+    mesh07.rotation.z = Math.PI / 4;
+    mesh07.castShadow = true;
+    scene.add(mesh07);
+
+    // 5. Flecos inferiores
+    var geometry08 = new THREE.PlaneGeometry(1.2, 1.5);
+    var matPapel08 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh08 = new THREE.Mesh(geometry08, matPapel08);
+    mesh08.position.set(-4.8, 3.25, 0);
+    mesh08.castShadow = true;
+    scene.add(mesh08);
+
+    var geometry09 = new THREE.PlaneGeometry(1.2, 1.5);
+    var matPapel09 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh09 = new THREE.Mesh(geometry09, matPapel09);
+    mesh09.position.set(-2.4, 3.25, 0);
+    mesh09.castShadow = true;
+    scene.add(mesh09);
+
+    var geometry10 = new THREE.PlaneGeometry(1.2, 1.5);
+    var matPapel10 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh10 = new THREE.Mesh(geometry10, matPapel10);
+    mesh10.position.set(0, 3.25, 0);
+    mesh10.castShadow = true;
+    scene.add(mesh10);
+
+    var geometry11 = new THREE.PlaneGeometry(1.2, 1.5);
+    var matPapel11 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh11 = new THREE.Mesh(geometry11, matPapel11);
+    mesh11.position.set(2.4, 3.25, 0);
+    mesh11.castShadow = true;
+    scene.add(mesh11);
+
+    var geometry12 = new THREE.PlaneGeometry(1.2, 1.5);
+    var matPapel12 = new THREE.MeshLambertMaterial({
+        color: 0xff007f,
+        side: THREE.DoubleSide,
+        flatShading: true
+    });
+    var mesh12 = new THREE.Mesh(geometry12, matPapel12);
+    mesh12.position.set(4.8, 3.25, 0);
+    mesh12.castShadow = true;
+    scene.add(mesh12);
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+        //🎮🎮Actualización del OrbitControls
+        controls.update();
+        
+        //Llamado para renderizar y volver a llamar a la misma función (render)
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+    }
+
+    // Ajuste responsivo al redimensionar la ventana
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+</script>
+</body>
+</html>
