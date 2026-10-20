@@ -1,0 +1,144 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>Fruta</title>
+</head>
+<body>
+    
+<canvas id="myCanvas">
+    <!--El elemento HTML canvas se puede utilizar para dibujar gráficos a través de 
+        secuencias de comandos (por lo general JavaScript ).-->
+</canvas>
+
+<!-- Aquí va todo el código de three.js -->
+<!-- script type="importmap" importa las librerías necesarias para three.js-->
+<script type="importmap"> 
+    {
+        "imports":{
+            "three": "./js/three.module.js",
+            "three/OrbitControls": "./js/OrbitControls.js" 
+        }
+}
+</script>
+<script type="module"> 
+//🗃️🗃️ Mandar llamar a la librería
+    import * as THREE from 'three'; 
+    import {OrbitControls} from 'three/OrbitControls';
+    console.log(OrbitControls);
+    import {RoundedBoxGeometry} from "./js/RoundedBoxGeometry.js"
+
+//🕹️🕹️ Renderer - Realiza una conexión entre el código y el canvas
+    var renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('myCanvas'), antialias: true,
+    });
+    renderer.setPixelRatio(window.decivePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x70707C);
+
+
+// 🎬 Creando nueva escena - Es el espacio donde se colocan los objetos
+    var scene = new THREE.Scene();
+
+//🎥🎥 Agregar una cámara de perspectiva
+    var camera = new THREE.PerspectiveCamera(70,window.innerWidth / window.innerHeight,0.1,2000
+      );
+    scene.add(camera);
+
+    //Settings de la cámara
+    camera.position.set(0, 4, 25);
+
+    // Añadiendo los OrbitControls
+    var controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+//Grids
+var gridHelper = new THREE.GridHelper(200,200);
+//scene.add(gridHelper);
+
+var Polargrid = new THREE.PolarGridHelper(50,50,20,20);
+ //scene.add(Polargrid);
+
+ //Ejes
+ var axes = new THREE.AxesHelper(100);
+//scene.add(axes);
+
+// Espacio para colocar los objetos
+
+///  💫💢🐭🐭 LUCES
+
+//OBJETOS  ✏️✏️✏️✏️  🪶
+
+//Primera Esfera
+var sphereGeo01 = new THREE.SphereGeometry(2);
+var sphereMat01 = new THREE.MeshBasicMaterial
+({
+    color:0xff6600,
+    side:THREE.DoubleSide
+});
+var mesh01 = new THREE.Mesh(sphereGeo01,sphereMat01);
+scene.add(mesh01);
+mesh01.position.set(-1.8, 2, 1.04)
+
+//Segunda Esfera
+var sphereGeo02 = new THREE.SphereGeometry(2);
+var sphereMat02 = new THREE.MeshBasicMaterial
+({
+    color:0xff6600,
+    side:THREE.DoubleSide
+});
+var mesh02 = new THREE.Mesh(sphereGeo02,sphereMat02);
+scene.add(mesh02);
+mesh02.position.set(1.8, 2, 1.04)
+
+//Tercera Esfera
+var sphereGeo03 = new THREE.SphereGeometry(2);
+var sphereMat03 = new THREE.MeshBasicMaterial
+({
+    color:0xff6600,
+    side:THREE.DoubleSide
+});
+var mesh03 = new THREE.Mesh(sphereGeo03,sphereMat03);
+scene.add(mesh03);
+mesh03.position.set(0, 2, -2.08)
+
+//Cuarta Esfera
+var sphereGeo04 = new THREE.SphereGeometry(2);
+var sphereMat04 = new THREE.MeshBasicMaterial
+({
+    color:0xff6600,
+    side:THREE.DoubleSide
+});
+var mesh04 = new THREE.Mesh(sphereGeo04,sphereMat04);
+scene.add(mesh04);
+mesh04.position.set(0, 4.5, 0)
+
+//Bowl
+var bowlGeo = new THREE.CylinderGeometry(6,2,2);
+var bowlMat = new THREE.MeshBasicMaterial
+({
+    color:0xdddddd,
+    side:THREE.DoubleSide
+});
+var mesh05 = new THREE.Mesh(bowlGeo,bowlMat);
+scene.add(mesh05);
+mesh05.position.set(0, 0, 0)
+
+
+//🎰🎰Rendering y animación
+    requestAnimationFrame(render);
+    function render() {
+    //🪄🪄 Animación - 
+
+
+
+
+
+    //🎮🎮Actualización del OrbitControls para generar la suavidad de movimiento
+    controls.update();
+    //Llamado para renderizar y volver a llamar a la misma función (render)
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+    }
+</script>
+</body>
+</html>
